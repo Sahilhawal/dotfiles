@@ -1,0 +1,12 @@
+# TPM-managed plugins (installed via `prefix + I`)
+.tmux/plugins/
+
+# tmux-resurrect / continuum saved sessions
+.tmux/resurrect/
+
+# caches & local state
+.cache/
+*.log
+
+# macOS
+.DS_Store

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Floating session picker with pinning support
+# p: pin selected session to top of list (persists across opens)
+# 1-9: instantly jump to and select that session
+LIST_CMD="{ cat \$HOME/.tmux-sessions-cache 2>/dev/null || bash \$HOME/scripts/tmux-session-list; } | cat -n"
+
+eval "$LIST_CMD" | \
+  fzf --reverse \
+    --header "  space: pin/unpin  |  1-9: instant switch" \
+    --bind "space:execute-silent(echo {} | bash $HOME/scripts/tmux-session-pin && bash $HOME/scripts/tmux-session-cache-refresh)+reload($LIST_CMD)" \
+    --bind '1:pos(1)+accept' \
+    --bind '2:pos(2)+accept' \
+    --bind '3:pos(3)+accept' \
+    --bind '4:pos(4)+accept' \
+    --bind '5:pos(5)+accept' \
+    --bind '6:pos(6)+accept' \
+    --bind '7:pos(7)+accept' \
+    --bind '8:pos(8)+accept' \
+    --bind '9:pos(9)+accept' | \
+  awk '{print $2}' | cut -d: -f1 | xargs tmux switch-client -t

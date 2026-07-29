@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Floating Claude agent picker — all claude windows with status
+# r: refresh   1-9: instant pick   Enter: switch to session
+
+LIST_CMD="bash $HOME/scripts/tmux-claude-list"
+
+selected=$(eval "$LIST_CMD" | \
+  fzf --ansi --reverse \
+    --delimiter=$'\t' \
+    --with-nth=2 \
+    --header "  Claude agents — r: refresh  |  1-9: instant pick" \
+    --bind "r:reload($LIST_CMD)" \
+    --bind '1:pos(1)+accept' \
+    --bind '2:pos(2)+accept' \
+    --bind '3:pos(3)+accept' \
+    --bind '4:pos(4)+accept' \
+    --bind '5:pos(5)+accept' \
+    --bind '6:pos(6)+accept' \
+    --bind '7:pos(7)+accept' \
+    --bind '8:pos(8)+accept' \
+    --bind '9:pos(9)+accept' | \
+  cut -f1)
+
+[[ -z "$selected" ]] && exit 0
+
+session=$(echo "$selected" | cut -d: -f1)
+widx=$(echo "$selected" | cut -d: -f2)
+
+tmux switch-client -t "${session}:${widx}"

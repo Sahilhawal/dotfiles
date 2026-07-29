@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Floating port-status picker — tracked dev ports, active/inactive, PID + cwd
+# Enter: open a new pane in that process's directory   ctrl-k: kill it   r: refresh
+
+LIST_CMD="bash $HOME/scripts/tmux-port-list"
+
+selected=$(eval "$LIST_CMD" | \
+  fzf --ansi --reverse \
+    --delimiter=$'\t' \
+    --with-nth=2 \
+    --header "  Ports — Enter: jump to dir  |  ctrl-k: kill  |  r: refresh" \
+    --bind "r:reload($LIST_CMD)" \
+    --bind "ctrl-k:execute-silent(pid=\$(cut -d: -f2 <<<{1}); [[ -n \"\$pid\" ]] && kill \"\$pid\")+reload($LIST_CMD)" | \
+  cut -f1)
+
+[[ -z "$selected" ]] && exit 0
+
+pid="${selected#*:}"
+[[ -z "$pid" ]] && exit 0
+
+cwd=$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | awk '/^n/{print substr($0,2); exit}')
+[[ -z "$cwd" ]] && exit 0
+
+tmux split-window -c "$cwd"

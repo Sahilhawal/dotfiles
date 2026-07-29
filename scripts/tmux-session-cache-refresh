@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+bash "$HOME/scripts/tmux-session-list" > "$HOME/.tmux-sessions-cache" 2>/dev/null
