@@ -2,9 +2,11 @@
 # Toggle tmux between TokyoNight dark and light themes.
 current="$(tmux show -gqv @theme)"
 if [ "$current" = "light" ]; then
+  tmux set -g @theme dark
   tmux source-file ~/.tmux/theme-dark.conf
   tmux display-message "tmux theme: dark"
 else
+  tmux set -g @theme light
   tmux source-file ~/.tmux/theme-light.conf
   tmux display-message "tmux theme: light"
 fi
