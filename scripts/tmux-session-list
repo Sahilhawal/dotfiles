@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# List tmux sessions: pinned first (in pin order), then the rest alphabetically
+pins_file="$HOME/.tmux-pinned-sessions"
+sessions=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | sort)
+[ -z "$sessions" ] && exit 0
+
+if [ -f "$pins_file" ]; then
+  while IFS= read -r pin; do
+    [ -n "$pin" ] && printf '%s\n' "$sessions" | grep -qxF "$pin" && echo "$pin"
+  done < "$pins_file"
+  printf '%s\n' "$sessions" | grep -vxF -f "$pins_file"
+else
+  printf '%s\n' "$sessions"
+fi

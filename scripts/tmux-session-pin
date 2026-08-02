@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Toggle pin for a session. Reads the fzf line ("<n> <session>") from stdin.
+pins_file="$HOME/.tmux-pinned-sessions"
+session=$(awk '{print $2}' | cut -d: -f1)
+[ -z "$session" ] && exit 0
+touch "$pins_file"
+if grep -qxF "$session" "$pins_file"; then
+  # grep exits 1 when no lines remain — that's fine, the file is just empty
+  grep -vxF "$session" "$pins_file" > "$pins_file.tmp" || true
+  mv "$pins_file.tmp" "$pins_file"
+else
+  echo "$session" >> "$pins_file"
+fi
