@@ -125,7 +125,7 @@ source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-bindkey -s ^f "sh scripts/tmux-sessionizer\n"
+bindkey -s ^f "$HOME/scripts/tmux-sessionizer\n"
 
 export NVM_DIR="$HOME/.nvm"
 # nvm: homebrew (macOS) or manual install (Linux)
