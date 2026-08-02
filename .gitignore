@@ -10,3 +10,6 @@
 
 # macOS
 .DS_Store
+
+# per-machine local config
+.zshrc.local
