@@ -2,7 +2,14 @@
 # Floating project picker — fzf list of ~/code projects, opens/switches to tmux session
 # 1-9: instantly pick by number
 
-LIST_CMD="{ find /Users/sahil/code -mindepth 1 -maxdepth 1 -type d; find /Users/sahil/code/punch-web-worktrees -mindepth 1 -maxdepth 1 -type d 2>/dev/null; } | sort | cat -n"
+# Projects dir: ~/code (macOS) or ~/Code (Linux)
+if [ -d "$HOME/code" ]; then
+  projects_dir="$HOME/code"
+else
+  projects_dir="$HOME/Code"
+fi
+
+LIST_CMD="{ find $projects_dir -mindepth 1 -maxdepth 1 -type d; find $projects_dir/punch-web-worktrees -mindepth 1 -maxdepth 1 -type d 2>/dev/null; } | sort | cat -n"
 
 selected=$(eval "$LIST_CMD" | \
   fzf --reverse \
